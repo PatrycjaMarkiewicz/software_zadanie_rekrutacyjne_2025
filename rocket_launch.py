@@ -30,10 +30,12 @@ parachute_opened_flag = False
 def on_fuel_level(frame: Frame):
     global fuel_level
     fuel_level = frame.payload[0]
+    print(f"Registered frame received: {frame}")
 
 def on_oxidizer_level(frame: Frame):
     global oxidizer_level
     oxidizer_level = frame.payload[0]
+    print(f"Registered frame received: {frame}")
 
 def on_altitude(frame: Frame):
     global altitude, apogee_reached
@@ -41,14 +43,17 @@ def on_altitude(frame: Frame):
     if current_altitude < altitude:
         apogee_reached = True
     altitude = current_altitude
+    print(f"Registered frame received: {frame}")
 
 def on_pressure(frame: Frame):
     global pressure
     pressure = frame.payload[0]
+    print(f"Registered frame received: {frame}")
 
 def on_oxidizer_open(frame: Frame):
     global oxidizer_open
     oxidizer_open = frame.payload[0]
+    print(f"Registered frame received: {frame}")
 
 
 if __name__ == "__main__":
@@ -258,9 +263,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            cm.send()
-            frame = cm.receive()  # We can handle frames using callbacks or by getting frame right from receive() call
-
+            frame = cm.receive()
             # 1. Tankowanie utleniacza
             if not oxidizer_done_flag and oxidizer_level >= 100 and pressure >= 30.0 and oxidizer_open==0:
                 cm.push(oxidizer_servo_close_frame)
